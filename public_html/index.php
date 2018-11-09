@@ -10,7 +10,7 @@
 
 <body>
     <h1>It Works!</h1>
-    <p>Put your files into publick_html folder (replace index.php file).</p>
+    <p>Put your files into public_html folder (replace index.php file).</p>
     Navigate to <a href="http://localhost:8080">PhpMyAdmin</a> for database management.
     <h3>Database credentials:</h3>
     <table>
