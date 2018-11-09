@@ -1,0 +1,53 @@
+version: '3.3'
+
+services:
+  php:
+    image: wodby/drupal-php:5.6-dev-4.9.0
+    environment:
+      DB_HOST: mysql
+      DB_USER: drupal
+      DB_PASSWORD: drupal
+      DB_NAME: drupal
+      DB_DRIVER: mysql
+      COLUMNS: 80
+    volumes:
+      - ./public_html:/var/www/html
+
+  apache:
+    image: wodby/apache:2.4-4.0.2
+    depends_on:
+     - php
+    environment:
+      APACHE_LOG_LEVEL: debug
+      APACHE_BACKEND_HOST: php
+      APACHE_VHOST_PRESET: php
+      APACHE_DOCUMENT_ROOT: /var/www/html
+    ports:
+      - 80:80
+    volumes:
+      - ./public_html:/var/www/html
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somedpupal
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      environment:
+          - PMA_ARBITRARY=1
+          - PMA_HOST=mysql
+          - PMA_USER=root
+          - PMA_PASSWORD=somedpupal
+      restart: always
+      ports:
+          - 8080:80
+      links:
+          - mysql
+volumes: 
+  db_data:
