@@ -1,34 +1,37 @@
-version: '3.3'
+version: "3.3"
 
 services:
   php:
     image: wodby/drupal-php:5.6-dev-4.9.0
+    container_name: "${PROJECT_NAME}_php"
     environment:
-      DB_HOST: mysql
-      DB_USER: drupal
-      DB_PASSWORD: drupal
-      DB_NAME: drupal
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
       DB_DRIVER: mysql
       COLUMNS: 80
     volumes:
-      - ./public_html:/var/www/html
+      - ./public_html:/var/www/html:cached
 
   apache:
     image: wodby/apache:2.4-4.0.2
+    container_name: "${PROJECT_NAME}_apache"
     depends_on:
-     - php
+      - php
+    ports:
+      - 80:80
     environment:
       APACHE_LOG_LEVEL: debug
       APACHE_BACKEND_HOST: php
       APACHE_VHOST_PRESET: php
       APACHE_DOCUMENT_ROOT: /var/www/html
-    ports:
-      - 80:80
     volumes:
-      - ./public_html:/var/www/html
+      - ./public_html:/var/www/html:cached
 
   mysql:
     image: mysql:5.7
+    container_name: "${PROJECT_NAME}_mysql"
     volumes:
       - db_data:/var/lib/mysql
     restart: always
@@ -37,17 +40,17 @@ services:
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
-  phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      environment:
-          - PMA_ARBITRARY=1
-          - PMA_HOST=mysql
-          - PMA_USER=root
-          - PMA_PASSWORD=somedpupal
-      restart: always
-      ports:
-          - 8080:80
-      links:
-          - mysql
-volumes: 
+
+  # pma:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: "${PROJECT_NAME}_pma"
+  #   environment:
+  #     PMA_HOST: $DB_HOST
+  #     PMA_USER: $DB_USER
+  #     PMA_PASSWORD: $DB_PASSWORD
+  #     PHP_UPLOAD_MAX_FILESIZE: 1G
+  #     PHP_MAX_INPUT_VARS: 1G
+  #   ports:
+  #     - 8080:80
+volumes:
   db_data:
