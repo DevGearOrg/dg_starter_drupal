@@ -22,8 +22,14 @@ clear:
 	docker-compose down --rmi local -v
 	docker-compose rm -s -f -v
 
+ps:
+	@docker ps --filter name='$(PROJECT_NAME)*'
+
 drush:
 	docker exec $(shell docker ps --filter name='$(PROJECT_NAME)_php' --format "{{ .ID }}") drush -r /var/www/html $(filter-out $@,$(MAKECMDGOALS))
+
+shell:
+	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)_php' --format "{{ .ID }}") sh
 
 logs:
 	@docker-compose logs -f $(filter-out $@,$(MAKECMDGOALS))
