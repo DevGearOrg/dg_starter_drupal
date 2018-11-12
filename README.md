@@ -2,6 +2,9 @@
 
 DevGear Starter Kit for Drupal projects with Docker.  
 Based on [wodby/docker4drupal](https://github.com/wodby/docker4drupal) project but simplified.
+
+*Read this in other languages: [English](README.md), [Русский](README.ru.md).*
+
 ## Prerequirements:
 
 We're using some popular tools to help acheave your goals:

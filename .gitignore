@@ -1,0 +1,4 @@
+public_html/
+!public_html/.gitkeep
+tmp/
+!tmp/.gitkeep
