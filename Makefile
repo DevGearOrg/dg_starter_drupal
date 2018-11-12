@@ -43,7 +43,7 @@ new:
 	chown -R $(USER) ./public_html/
 	chmod -R 777 ./public_html/
 	rm -rf ./public_html/*
-	$(MAKE) run
+	$(MAKE) up
 	docker-compose run --rm php drush dl -v  --drupal-project-rename="../html" drupal-7 -y
 	docker-compose run --rm php drush site-install standard --account-name=$(ACCOUNT_NAME) --account-pass=$(ACCOUNT_PASS) --db-url=mysql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST)/$(DB_NAME) --site-name=$(PROJECT_NAME) -y
 	mkdir ./public_html/sites/all/modules/developer
