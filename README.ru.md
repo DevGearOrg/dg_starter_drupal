@@ -69,5 +69,5 @@ DevGear стартовый набор для Drupal проэктов с испо
 2. Есть более удбный способ создавать новый проект, не копируя zip руками?  
 Да, можно воспользоваться командой, которую просто копируем и вставляем в терминал, MY_PROJECT меняем на имя директории для проекта. В месте где запустили появится папка с содержимым. Переходим туда и продолжаем работу.
 ```
-curl -OL https://github.com/DevGearOrg/dg_starter_drupal/archive/master.zip; unzip -j ./master.zip -d MY_PROJECT
+curl -OL https://git.io/fpYJL; unzip -j ./master.zip -d MY_PROJECT
 ```
