@@ -1,19 +1,22 @@
 include .env
 
-.PHONY: up run restart stop prune clear shell drush logs
+.PHONY: up run stop stop_all restart prune clear clear_all ps ps_all drush shell logs new pma backup
 DRUPAL_ROOT ?= /var/www/html
 
 up:
-	docker-compose up --remove-orphans -d
+	docker-compose up -d --remove-orphans apache
 
 run:
 	@echo "Starting up containers for $(PROJECT_NAME)..."
 	docker-compose pull
-	docker-compose up --remove-orphans $(ARGS)
+	docker-compose up --remove-orphans $(ARGS) apache
 
 stop:
 	@echo "Stopping containers for $(PROJECT_NAME)..."
 	@docker-compose stop
+
+stop_all:
+	docker stop $(shell docker ps -a -q)
 
 restart: stop run
 
@@ -25,8 +28,15 @@ clear:
 	docker-compose down --rmi local -v
 	docker-compose rm -s -f -v
 
+clear_all:
+	$(MAKE) stop
+	docker rm -f $(shell docker ps -a -q)
+
 ps:
 	@docker ps --filter name='$(PROJECT_NAME)*'
+
+ps_all:
+	docker ps -a -q
 
 drush:
 	docker exec $(shell docker ps --filter name='$(PROJECT_NAME)_php' --format "{{ .ID }}") drush -r $(DRUPAL_ROOT) $(filter-out $@,$(MAKECMDGOALS))
@@ -49,6 +59,9 @@ new:
 	mkdir ./public_html/sites/all/modules/developer
 	mkdir ./public_html/sites/all/modules/contrib
 	docker-compose run --rm php drush dl -vy $(ADDITIONAL_MODULES)
+
+pma:
+	docker-compose up pma
 
 backup:
 	$(MAKE) drush sql-dump > tmp/`date +"%m.%d.%Y-%H:%M"`.sql

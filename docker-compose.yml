@@ -4,6 +4,8 @@ services:
   php:
     image: wodby/drupal-php:5.6-dev-4.9.0
     container_name: "${PROJECT_NAME}_php"
+    depends_on:
+      - mysql
     environment:
       DB_HOST: ${DB_HOST}
       DB_USER: ${DB_USER}
@@ -41,16 +43,17 @@ services:
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
 
-  # pma:
-  #   image: phpmyadmin/phpmyadmin
-  #   container_name: "${PROJECT_NAME}_pma"
-  #   environment:
-  #     PMA_HOST: $DB_HOST
-  #     PMA_USER: $DB_USER
-  #     PMA_PASSWORD: $DB_PASSWORD
-  #     PHP_UPLOAD_MAX_FILESIZE: 1G
-  #     PHP_MAX_INPUT_VARS: 1G
-  #   ports:
-  #     - 8080:80
+  pma:
+    image: phpmyadmin/phpmyadmin
+    container_name: "${PROJECT_NAME}_pma"
+    environment:
+      PMA_HOST: $DB_HOST
+      PMA_USER: $DB_USER
+      PMA_PASSWORD: $DB_PASSWORD
+      PHP_UPLOAD_MAX_FILESIZE: 1G
+      PHP_MAX_INPUT_VARS: 1G
+    ports:
+      - 8080:80
+
 volumes:
   db_data:
